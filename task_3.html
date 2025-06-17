@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Web Experience</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+         :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4ade80;
+            --danger: #f43f5e;
+            --warning: #f59e0b;
+            --quiz-bg: #f0f7ff;
+            --weather-bg: #fff7ed;
+            --joke-bg: #fdf2f8;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa, #e4edf9);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        /* Header Styles */
+        
+        header {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: var(--accent);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 8px;
+        }
+        
+        nav a:hover,
+        nav a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        /* Main Grid Layout */
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        /* Card Styling */
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent);
+        }
+        /* Quiz Styles */
+        
+        #quiz-container {
+            background: var(--quiz-bg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #quiz-container::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: var(--primary);
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+        
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        #progress {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        #score {
+            background: var(--success);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        #question {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .option {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .option:hover {
+            border-color: var(--accent);
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.1);
+        }
+        
+        .option.correct {
+            border-color: var(--success);
+            background: rgba(74, 222, 128, 0.1);
+        }
+        
+        .option.incorrect {
+            border-color: var(--danger);
+            background: rgba(244, 63, 94, 0.1);
+        }
+        
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .quiz-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+        .quiz-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+        /* API Cards */
+        
+        #weather-container {
+            background: var(--weather-bg);
+        }
+        
+        #joke-container {
+            background: var(--joke-bg);
+        }
+        
+        .api-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            text-align: center;
+        }
+        
+        .weather-icon {
+            font-size: 4rem;
+            margin: 20px 0;
+            color: var(--primary);
+        }
+        
+        .temp {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 10px 0;
+            color: var(--dark);
+        }
+        
+        .weather-details {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .detail {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            min-width: 100px;
+        }
+        
+        .detail-value {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-top: 5px;
+            color: var(--primary);
+        }
+        
+        #joke-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        
+        #joke-type {
+            background: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        
+        .api-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .api-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(67, 97, 238, 0.2);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        /* Footer Styles */
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        /* Responsive Adjustments */
+        
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            .weather-details {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            nav ul {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .card-title {
+                font-size: 1.5rem;
+            }
+            #question {
+                font-size: 1.2rem;
+            }
+            .quiz-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .quiz-btn {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            .card {
+                padding: 20px;
+            }
+            .option {
+                padding: 12px;
+            }
+            .temp {
+                font-size: 2.5rem;
+            }
+            #joke-text {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-laptop-code"></i>
+                <span>DevHub</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Projects</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="main-grid">
+            <!-- Quiz Card -->
+            <div class="card" id="quiz-container">
+                <h2 class="card-title"><i class="fas fa-question-circle"></i> Web Dev Quiz</h2>
+                <div class="quiz-header">
+                    <div id="progress">Question 1 of 5</div>
+                    <div id="score">Score: 0</div>
+                </div>
+                <div id="question">What does CSS stand for?</div>
+                <div class="options">
+                    <div class="option" data-value="1">Computer Style Sheets</div>
+                    <div class="option" data-value="2">Creative Style System</div>
+                    <div class="option" data-value="3">Cascading Style Sheets</div>
+                    <div class="option" data-value="4">Colorful Style Sheets</div>
+                </div>
+                <div class="quiz-controls">
+                    <button class="quiz-btn" id="prev-btn" disabled>
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="quiz-btn" id="next-btn">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="quiz-btn" id="submit-btn" style="display: none;">
+                        Submit Quiz <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Weather Card -->
+            <div class="card" id="weather-container">
+                <h2 class="card-title"><i class="fas fa-cloud-sun"></i> Weather Info</h2>
+                <div class="api-content" id="weather-content">
+                    <div class="loader"></div>
+                    <p>Loading weather data...</p>
+                </div>
+            </div>
+
+            <!-- Joke Card -->
+            <div class="card" id="joke-container">
+                <h2 class="card-title"><i class="fas fa-laugh-beam"></i> Random Joke</h2>
+                <div class="api-content" id="joke-content">
+                    <div class="loader"></div>
+                    <p>Loading a funny joke...</p>
+                </div>
+                <button class="api-btn" id="new-joke-btn">
+                    <i class="fas fa-sync-alt"></i> Get New Joke
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2023 DevHub. All rights reserved. | Responsive Design, Interactive Quiz & API Integration</p>
+        </footer>
+    </div>
+
+    <script>
+        // Quiz Data and Functionality
+        const quizData = [{
+            question: "What does CSS stand for?",
+            options: [
+                "Computer Style Sheets",
+                "Creative Style System",
+                "Cascading Style Sheets",
+                "Colorful Style Sheets"
+            ],
+            correct: 3
+        }, {
+            question: "Which HTML tag is used to define an internal stylesheet?",
+            options: [
+                "<script>",
+                "<css>",
+                "<style>",
+                "<stylesheet>"
+            ],
+            correct: 3
+        }, {
+            question: "Which property is used to change the background color?",
+            options: [
+                "color",
+                "bgcolor",
+                "background-color",
+                "background"
+            ],
+            correct: 3
+        }, {
+            question: "How do you select an element with id 'demo' in CSS?",
+            options: [
+                "demo",
+                "#demo",
+                ".demo",
+                "*demo"
+            ],
+            correct: 2
+        }, {
+            question: "Which HTML attribute is used to define inline styles?",
+            options: [
+                "class",
+                "font",
+                "styles",
+                "style"
+            ],
+            correct: 4
+        }];
+
+        // Quiz elements
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.querySelector('.options');
+        const progressElement = document.getElementById('progress');
+        const scoreElement = document.getElementById('score');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+
+        // Quiz state
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+
+        // Initialize quiz
+        function loadQuestion() {
+            const currentQuiz = quizData[currentQuestion];
+            questionElement.textContent = currentQuiz.question;
+
+            // Update progress
+            progressElement.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+
+            // Clear options
+            optionsElement.innerHTML = '';
+
+            // Create options
+            currentQuiz.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                optionElement.textContent = option;
+                optionElement.dataset.value = index + 1;
+
+                // Mark selected answer if exists
+                if (userAnswers[currentQuestion] === index + 1) {
+                    optionElement.classList.add('selected');
+                }
+
+                optionElement.addEventListener('click', selectOption);
+                optionsElement.appendChild(optionElement);
+            });
+
+            // Update button states
+            prevBtn.disabled = currentQuestion === 0;
+            nextBtn.style.display = currentQuestion < quizData.length - 1 ? 'block' : 'none';
+            submitBtn.style.display = currentQuestion === quizData.length - 1 ? 'block' : 'none';
+        }
+
+        function selectOption(e) {
+            const selectedOption = e.target;
+            const options = document.querySelectorAll('.option');
+
+            // Remove selected class from all options
+            options.forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // Add selected class to clicked option
+            selectedOption.classList.add('selected');
+
+            // Save user answer
+            userAnswers[currentQuestion] = parseInt(selectedOption.dataset.value);
+        }
+
+        function showResult() {
+            // Calculate score
+            userAnswers.forEach((answer, index) => {
+                if (answer === quizData[index].correct) {
+                    score++;
+                }
+            });
+
+            // Update UI with results
+            optionsElement.innerHTML = '';
+            questionElement.textContent = `Quiz Completed! Your score: ${score}/${quizData.length}`;
+            progressElement.textContent = 'Results';
+            scoreElement.textContent = `Score: ${score}`;
+
+            // Show detailed results
+            quizData.forEach((quiz, index) => {
+                const resultItem = document.createElement('div');
+                resultItem.style.marginBottom = '15px';
+                resultItem.style.padding = '15px';
+                resultItem.style.borderRadius = '10px';
+                resultItem.style.background = userAnswers[index] === quiz.correct ?
+                    'rgba(74, 222, 128, 0.1)' : 'rgba(244, 63, 94, 0.1)';
+
+                resultItem.innerHTML = `
+                    <div><strong>Q${index + 1}:</strong> ${quiz.question}</div>
+                    <div style="margin-top: 10px;">
+                        <div>Your answer: ${quiz.options[userAnswers[index] - 1] || 'Not answered'}</div>
+                        <div>Correct answer: ${quiz.options[quiz.correct - 1]}</div>
+                    </div>
+                `;
+
+                optionsElement.appendChild(resultItem);
+            });
+
+            // Hide navigation buttons
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'none';
+        }
+
+        // Navigation
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        });
+
+        submitBtn.addEventListener('click', showResult);
+
+        // Initialize quiz
+        loadQuestion();
+
+        // API Functions
+        // Weather API - Using OpenWeatherMap
+        async function fetchWeather() {
+            const weatherContent = document.getElementById('weather-content');
+
+            try {
+                // In a real app, you would use your own API key here
+                // For demo purposes, we'll use a mock response
+
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Mock weather data
+                const weatherData = {
+                    temp: 22,
+                    description: "Partly Cloudy",
+                    humidity: 65,
+                    wind: 3.5,
+                    city: "London"
+                };
+
+                const weatherIcon = weatherData.description.includes('Cloud') ? 'fa-cloud' :
+                    weatherData.description.includes('Rain') ? 'fa-cloud-rain' :
+                    weatherData.description.includes('Sun') ? 'fa-sun' : 'fa-cloud-sun';
+
+                weatherContent.innerHTML = `
+                    <i class="fas ${weatherIcon} weather-icon"></i>
+                    <div class="temp">${weatherData.temp}°C</div>
+                    <div>${weatherData.description}</div>
+                    <div style="margin-top: 10px; font-weight: 600;">${weatherData.city}</div>
+                    
+                    <div class="weather-details">
+                        <div class="detail">
+                            <div>Humidity</div>
+                            <div class="detail-value">${weatherData.humidity}%</div>
+                        </div>
+                        <div class="detail">
+                            <div>Wind</div>
+                            <div class="detail-value">${weatherData.wind} m/s</div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                weatherContent.innerHTML = `
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--danger);"></i>
+                    <p>Failed to load weather data</p>
+                    <p style="margin-top: 10px; color: var(--danger);">${error.message}</p>
+                `;
+            }
+        }
+
+        // Joke API - Using Official Joke API
+        async function fetchJoke() {
+            const jokeContent = document.getElementById('joke-content');
+
+            try {
+                // Show loader
+                jokeContent.innerHTML = `
+                    <div class="loader"></div>
+                    <p>Loading a funny joke...</p>
+                `;
+
+                // Fetch from API
+                const response = await fetch('https://official-joke-api.appspot.com/random_joke');
+                const jokeData = await response.json();
+
+                jokeContent.innerHTML = `
+                    <div id="joke-text">${jokeData.setup}<br>${jokeData.punchline}</div>
+                    <div id="joke-type">${jokeData.type}</div>
+                `;
+            } catch (error) {
+                // Fallback joke
+                jokeContent.innerHTML = `
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--danger);"></i>
+                    <p>Failed to load joke</p>
+                    <p style="margin-top: 10px; color: var(--danger);">${error.message}</p>
+                    <div id="joke-text" style="margin-top: 20px;">Why did the web developer go broke?<br>Because he lost his cache in the cloud!</div>
+                    <div id="joke-type">fallback</div>
+                `;
+            }
+        }
+
+        // Event listeners for API buttons
+        document.getElementById('new-joke-btn').addEventListener('click', fetchJoke);
+
+        // Initialize API data
+        fetchWeather();
+        fetchJoke();
+    </script>
+</body>
+
+</html>
